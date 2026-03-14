@@ -16,3 +16,7 @@ Route::post('/cuotas', [CuotaController::class, 'store']);
 Route::get('/cuotas/{id}', [CuotaController::class, 'show']);
 Route::put('/cuotas/{id}', [CuotaController::class, 'update']);
 Route::delete('/cuotas/{id}', [CuotaController::class, 'destroy']);
+
+Route::get('/apuestas', [ApuestaController::class, 'index']);
+Route::post('/apuestas', [ApuestaController::class, 'store']);
+Route::get('/apuestas/{id}', [ApuestaController::class, 'show']);
