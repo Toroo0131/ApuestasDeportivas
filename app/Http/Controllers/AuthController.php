@@ -124,10 +124,11 @@ class AuthController extends Controller
     }
 
     public function me()
+    {
+        return response()->json([
+            'user' => auth('api')->user(),
+        ], 200);
+    }
 
-        {
-            return response()->json([
-                'user' => auth('')->user(),
-            ], 200);
-        }
+
 }

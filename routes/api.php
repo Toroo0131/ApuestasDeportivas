@@ -26,6 +26,8 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::middleware('auth:api')->group(function () {
 
     // Consultas disponibles para usuarios autenticados
+    Route::get('/me', [AuthController::class, 'me']);
+
     Route::get('/eventos', [EventoController::class, 'index']);
     Route::get('/eventos/{id}', [EventoController::class, 'show']);
 
