@@ -117,5 +117,66 @@ class EventoController extends Controller
         return response()->json([
             'message' => 'Evento eliminado correctamente'
         ], 200);
+        
     }
+    
+    public function resolver(Request $request, string $id)
+{
+    $validator = Validator::make($request->all(), [
+        'resultado' => 'required|in:local,empate,visitante',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    $evento = Evento::find($id);
+
+    if (! $evento) {
+        return response()->json([
+            'message' => 'Evento no encontrado'
+        ], 404);
+    }
+
+    if ($evento->estado === 'finalizado') {
+        return response()->json([
+            'message' => 'El evento ya fue resuelto'
+        ], 400);
+    }
+
+    $evento->estado = 'finalizado';
+    $evento->resultado = $request->resultado;
+    $evento->save();
+
+    $apuestas = \App\Models\Apuesta::with(['cuota', 'user'])
+        ->where('evento_id', $evento->id)
+        ->get();
+
+    foreach ($apuestas as $apuesta) {
+
+        if ($apuesta->cuota && $apuesta->cuota->tipo_apuesta === $request->resultado) {
+
+            $apuesta->estado = 'ganada';
+            $apuesta->save();
+
+            $apuesta->user->saldo += $apuesta->ganancia_posible;
+            $apuesta->user->save();
+
+        } else {
+
+            $apuesta->estado = 'perdida';
+            $apuesta->save();
+        }
+    }
+
+    return response()->json([
+        'message' => 'Evento resuelto correctamente',
+        'evento' => $evento,
+        'apuestas_procesadas' => $apuestas->count()
+    ], 200);
+}
+
+
 }
