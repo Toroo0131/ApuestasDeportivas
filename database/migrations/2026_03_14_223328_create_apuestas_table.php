@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('evento_id')->constrained('eventos')->onDelete('cascade');
             $table->foreignId('cuota_id')->constrained('cuotas')->onDelete('cascade');
             $table->decimal('monto', 10, 2);
-            $table->decimal('gananacia_posible', 10, 2);
+            $table->decimal('ganancia_posible', 10, 2);
             $table->enum('estado',['pendiente','ganada','perdida'])->default('pendiente');
             $table->timestamps();
         });

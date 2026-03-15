@@ -20,4 +20,9 @@ class Cuota extends Model
     {
         return $this->belongsTo(Evento::class);
     }
+
+    public function apuestas()
+    {
+        return $this->hasMany(Apuesta::class);
+    }
 }

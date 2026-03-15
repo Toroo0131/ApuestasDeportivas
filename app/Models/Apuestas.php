@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Apuesta extends Model
+class Apuestas extends Model
 {
+    use HasFactory;
+
+    protected $table = 'apuestas';
     protected $fillable = [
         'user_id',
         'evento_id',
