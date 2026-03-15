@@ -7,8 +7,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+/* Controlador encargado de gestionar la autenticacion de usuraios
+*Este controlador, permite
+-registrar usuarios
+-Iniciar sesión
+-Generar y verificar codigo OTP
+-Obtenerla informacion del usuario autenticado
+
+*/
+
 class AuthController extends Controller
+
 {
+    /*Registrar un nuevo usuario en el sistema
+    -Valida los datos recibidos desde la peticion HTTP y crea
+    un nuevo registro en la base de datos. Si no se especfica
+    un rol, se asigna autenticamente el rol "usuario"
+
+
+    */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -36,6 +53,14 @@ class AuthController extends Controller
             'user' => $user
         ], 201);
     }
+
+    /*Autenticar un usuario en el sistema
+    -Verifica las credenciales del usuario. Si son correctas
+    se genera un codigo OTP temporal que debe ser verificado
+    antes de emitir el token JWT
+
+
+    */
 
     public function login(Request $request)
     {
@@ -74,6 +99,13 @@ class AuthController extends Controller
             'otp_demo' => $otp
         ], 200);
     }
+
+    /*Verificar el codigo OTP enviado al usuario
+
+    si el OTP es valido y no ha expirado, se genera un token
+    JWT que permitira acceder a las rutas protegudas de la API
+
+    */
 
     public function verifyOtp(Request $request)
     {
@@ -120,8 +152,13 @@ class AuthController extends Controller
             'user' => $user
         ], 200);
 
-
     }
+    /*Obtener la informacion del usuario atenticado
+
+    Este EndPoind devuelve los datos del usuario asociado
+    al token JWT enviado en la peticion
+
+    */
 
     public function me()
     {
