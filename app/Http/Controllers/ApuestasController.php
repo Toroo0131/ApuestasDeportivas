@@ -96,5 +96,19 @@ class ApuestasController extends Controller
             'data' => $apuesta
         ], 200);
     }
+
+    public function misApuestas()
+    {
+        $user = auth('api')->user();
+
+        $apuestas = \App\Models\Apuestas::with(['evento', 'cuota'])
+        ->where('user_id', $user->id)
+        ->get();
+
+        return response()->json([
+            'message'=> 'Mis apuestas',
+            'data' => $apuestas
+        ], 200);
+    }
 }
 
