@@ -9,9 +9,31 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/*
+controlador encargado de gestionar todas las operaciones con las
+apuestas dentro del sistema
+
+permite listar apuestas
+registrar nuevas apuestas
+consultar apuestas por ID
+Consultar aouestas del usuario autenticado
+
+
+*/
+
 class ApuestasController extends Controller
+
 {
-    public function index()
+
+/*
+mostrar listado de todas las apuestas registradas
+
+Incluye las relaciones con
+usuario
+evento
+cuota
+*/
+public function index()
     {
         $apuestas = Apuestas::with(['user', 'evento', 'cuota'])->get();
 
@@ -21,6 +43,21 @@ class ApuestasController extends Controller
         ], 200);
     }
 
+
+    /*
+    registrar una nueva apuesta en el sistema
+
+    valida:
+    user_id exista
+    cuota id_ existente
+    monto mayor a 0
+
+    calcula la ganancia posible multiplicando el monto
+    por la cuota
+
+    utliza una transaccion de base de datos para asegurar
+    integridad
+    */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -80,7 +117,16 @@ class ApuestasController extends Controller
             ], 500);
         }
     }
+    
+    /*
+    mostrar el detalle de una puesta especifica
 
+    busca una apuesta por su ID e incluye
+    usuario
+    evento
+    cuota
+
+    */
     public function show($id)
     {
         $apuesta = Apuestas::with(['user', 'evento', 'cuota'])->find($id);
@@ -96,6 +142,14 @@ class ApuestasController extends Controller
             'data' => $apuesta
         ], 200);
     }
+
+    /*
+    obtener todas las apuestas del usuario autenticado
+
+    utiliza el sistema de autenticacion API para identificar 
+    al usuario actual y retorna unicamente sus apuestas
+    */
+
 
     public function misApuestas()
     {
