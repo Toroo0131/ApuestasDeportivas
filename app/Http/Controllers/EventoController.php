@@ -6,9 +6,23 @@ use App\Models\Evento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/*
+Controlador encargado de gestionar los evntos deportivos
+dentro del sistema de apuestas
+
+permite
+listar eventos
+crear eventos
+consultar un evento especifico
+actualizar eventos
+eliminar eventos
+resolver eventos y procesar las apuestas relacionadas
+*/
+
 class EventoController extends Controller
 {
-    public function index()
+//mostrar el listado de los eventos relacionados
+public function index()
     {
         $eventos = Evento::all();
 
@@ -18,6 +32,9 @@ class EventoController extends Controller
         ], 200);
     }
 
+    //registrar un nuevo evento deportivo
+    // valida los datos recibidos y crea un nuevo evento
+    //con estado "pendiente" por defecto
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -48,6 +65,7 @@ class EventoController extends Controller
         ], 201);
     }
 
+    //mostrar el detalle de un evento en especifico
     public function show(string $id)
     {
         $evento = Evento::find($id);
@@ -64,6 +82,8 @@ class EventoController extends Controller
         ], 200);
     }
 
+    //actualizar los datos de un evento existente
+    //solo se actualizan los campos enviados en la peticion
     public function update(Request $request, string $id)
     {
         $evento = Evento::find($id);
@@ -102,6 +122,7 @@ class EventoController extends Controller
         ], 200);
     }
 
+    //eliminar un evento del sistema
     public function destroy(string $id)
     {
         $evento = Evento::find($id);
@@ -119,6 +140,18 @@ class EventoController extends Controller
         ], 200);
         
     }
+
+    /*
+    Resolver un evento deportivo.
+     *
+     * Este método:
+     * - Define el resultado del evento (local, empate, visitante)
+     * - Cambia el estado del evento a "finalizado"
+     * - Procesa todas las apuestas relacionadas
+     * - Determina si cada apuesta fue ganada o perdida
+     * - Acredita las ganancias al saldo del usuario ganador
+
+    */
     
     public function resolver(Request $request, string $id)
 {
