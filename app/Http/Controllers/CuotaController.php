@@ -6,8 +6,25 @@ use App\Models\Cuota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/*
+Controlador encargado de gestionar las cuotas de los eventos
+dentro del sistema de apuestas
+
+permite
+listar cuotas
+crear nuevas cuotas
+consultar una cuota especifica
+actualizar cuotas
+eliminar cuotas
+*/
+
 class CuotaController extends Controller
 {
+
+/*
+mostrar listado de todas las cuotas registradas
+incluye la relacion con el evento asociado
+*/
 
     public function index()
     {
@@ -18,6 +35,15 @@ class CuotaController extends Controller
             'data' => $cuotas
         ]);
     }
+
+    /*
+    registrar una nueva cuota al sistema
+
+    valida los datos recibidos
+    evento_id debe existir en la tabla eventos
+    tipo_aouesta debe ser un string
+    cuota debe ser numerica
+    */
 
     public function store(Request $request)
     {
@@ -39,6 +65,11 @@ class CuotaController extends Controller
         ]);
     }
 
+    /*
+    mostrar informacion de una cuota especifica
+
+    busca la cuota por su ID
+    */
     public function show($id)
     {
         $cuota = Cuota::find($id);
@@ -49,6 +80,14 @@ class CuotaController extends Controller
 
         return response()->json($cuota);
     }
+
+    /*
+    Actualizar los datos de una cuota existente
+
+    permite modicar los campos de la cuota usando 
+    los datos enviados en la peticion
+
+    */
 
     public function update(Request $request, $id)
     {
@@ -66,6 +105,11 @@ class CuotaController extends Controller
         ]);
     }
 
+    /*
+    eliminar una cuota del sistema
+
+    busca la couta por su ID y la elimina de la base de datos
+    */
     public function destroy($id)
     {
         $cuota = Cuota::find($id);
